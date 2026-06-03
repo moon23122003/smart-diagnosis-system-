@@ -1,0 +1,6 @@
+git init
+git add .
+git commit -m "Initial commit - Smart Diagnosis System v2.0"
+git branch -M main
+git remote add origin https://github.com/moon23122003/smart-diagnosis-system.git
+git push -u origin main

@@ -10,10 +10,10 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Slab:wght@600;700&display=swap');
 
-html, body, [class*="css"] {
+html, body, [class*="css"], p, span, div, label, h1, h2, h3, h4, h5 {
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
-    color: #1a1a1a;
+    color: #111111 !important;
 }
 .stApp { background: #f0f2f5; }
 #MainMenu, footer, header { visibility: hidden; }

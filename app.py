@@ -1,5 +1,5 @@
 
-import streamlit as st
+mport streamlit as st
 import pandas as pd
 from datetime import datetime, date
 from model import predict_disease, get_all_symptoms, get_model_accuracy
@@ -9,6 +9,12 @@ st.set_page_config(page_title="Smart Diagnosis System", page_icon="🏥", layout
 
 st.markdown("""
 <style>
+
+[data-testid="collapsedControl"] {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Slab:wght@600;700&display=swap');
 
 html, body, [class*="css"] {
@@ -17,7 +23,7 @@ html, body, [class*="css"] {
     color: #1a1a1a;
 }
 .stApp { background: #f0f2f5; }
-#MainMenu, footer, header { visibility: hidden; }
+#MainMenu, footer, header { visibility:  hidden; }
 
 /* ── TOP HEADER ───────────────────────────── */
 .page-header {
@@ -665,46 +671,7 @@ div[data-testid="metric-container"] label {
 .cert-badge.green { border-color:#27ae60; color:#1a6b3a; background:#f0fff4; }
 .cert-badge.blue  { border-color:#2980b9; color:#1a5276; background:#f0f8ff; }
 
-/* ── SIDEBAR TOGGLE BUTTON FIX ────────────── */
-/* Show a floating ☰ button when sidebar is collapsed */
-[data-testid="collapsedControl"] {
-    display: flex !important;
-    visibility: visible !important;
-    background: linear-gradient(135deg, #1a3c5e, #2a5f8f) !important;
-    color: white !important;
-    border-radius: 0 8px 8px 0 !important;
-    width: 36px !important;
-    height: 48px !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-size: 1.3rem !important;
-    box-shadow: 3px 0 12px rgba(0,0,0,0.2) !important;
-    cursor: pointer !important;
-    top: 50% !important;
-    z-index: 999 !important;
-    border: none !important;
-}
-[data-testid="collapsedControl"]:hover {
-    background: linear-gradient(135deg, #c0392b, #e74c3c) !important;
-    width: 42px !important;
-}
-[data-testid="collapsedControl"] svg {
-    fill: white !important;
-    color: white !important;
-}
-
-/* Style the existing close (X) button to match */
-[data-testid="baseButton-headerNoPadding"],
-button[kind="header"] {
-    background: rgba(255,255,255,0.12) !important;
-    border-radius: 6px !important;
-    color: white !important;
-    border: 1px solid rgba(255,255,255,0.25) !important;
-}
-[data-testid="baseButton-headerNoPadding"]:hover {
-    background: #c0392b !important;
-    border-color: #c0392b !important;
-}
+/* ── SUCCESS / WARNING ────────────────────── */
 .stSuccess > div, .stWarning > div, .stError > div {
     border-radius: 5px !important;
     font-size: 0.85rem !important;
@@ -712,7 +679,7 @@ button[kind="header"] {
 </style>
 """, unsafe_allow_html=True)
 
-DISPLAY_ACCURACY = 89.4
+DISPLAY_ACCURACY = 87.4
 
 # ═══════════════════════════════════════════════════
 # SIDEBAR
@@ -1119,3 +1086,5 @@ Machine Learning model on a comprehensive medical dataset.
 >
 > 🚑 **Emergency:** 108 &nbsp;|&nbsp; Ambulance: 102 &nbsp;|&nbsp; Mental Health: 9152987821
 """)
+
+

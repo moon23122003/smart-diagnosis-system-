@@ -1,5 +1,5 @@
 
-mport streamlit as st
+import streamlit as st
 import pandas as pd
 from datetime import datetime, date
 from model import predict_disease, get_all_symptoms, get_model_accuracy

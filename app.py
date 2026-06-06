@@ -302,30 +302,48 @@ input[type="email"], input[type="tel"] {
 }
 [role="option"],
 [data-baseweb="menu"] li,
-[data-baseweb="list"] li {
+[data-baseweb="list"] li,
+li[aria-selected] {
     background: #ffffff !important;
     background-color: #ffffff !important;
     color: #1a1a2e !important;
     -webkit-text-fill-color: #1a1a2e !important;
-    font-size: 0.88rem !important;
-    padding: 9px 14px !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    padding: 10px 16px !important;
     cursor: pointer !important;
     border-bottom: 1px solid #f0f4f8 !important;
 }
 [role="option"]:hover,
-[data-baseweb="menu"] li:hover {
+[data-baseweb="menu"] li:hover,
+li[aria-selected]:hover {
     background: #eaf2fb !important;
     background-color: #eaf2fb !important;
     color: #1b3a5c !important;
     -webkit-text-fill-color: #1b3a5c !important;
 }
 [aria-selected="true"],
-[data-baseweb="menu"] li[aria-selected="true"] {
+[data-baseweb="menu"] li[aria-selected="true"],
+li[aria-selected="true"] {
     background: #1b3a5c !important;
     background-color: #1b3a5c !important;
     color: #ffffff !important;
     -webkit-text-fill-color: #ffffff !important;
     font-weight: 700 !important;
+}
+/* Extra: force all text inside popup to be visible */
+[data-baseweb="popover"] div,
+[data-baseweb="popover"] span,
+[data-baseweb="popover"] p,
+[data-baseweb="popover"] li {
+    color: #1a1a2e !important;
+    -webkit-text-fill-color: #1a1a2e !important;
+    background-color: transparent !important;
+}
+[data-baseweb="popover"] [aria-selected="true"] div,
+[data-baseweb="popover"] [aria-selected="true"] span {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
 }
 
 /* ═══ SELECTBOX DISPLAY FIX ══════════════════════════════════ */
@@ -671,6 +689,89 @@ input[type="email"], input[type="tel"] {
     border-radius: 8px !important;
     border: 1px solid #d5e3ef !important;
 }
+
+/* ═══ SEVERITY / WELLNESS BANNER ════════════════════════════ */
+.sev-banner {
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    animation: slideIn 0.4s ease;
+}
+@keyframes slideIn {
+    from { opacity:0; transform:translateY(-10px); }
+    to   { opacity:1; transform:translateY(0); }
+}
+.sev-banner.critical {
+    background: linear-gradient(135deg, #fff0f0, #ffe4e4);
+    border: 3px solid #e74c3c;
+    border-left: 8px solid #c0392b;
+    box-shadow: 0 4px 16px rgba(231,76,60,0.2);
+}
+.sev-banner.warning {
+    background: linear-gradient(135deg, #fffbf0, #fff3cd);
+    border: 3px solid #f39c12;
+    border-left: 8px solid #e67e22;
+    box-shadow: 0 4px 16px rgba(243,156,18,0.2);
+}
+.sev-banner.ok {
+    background: linear-gradient(135deg, #f0fff4, #d4edda);
+    border: 3px solid #27ae60;
+    border-left: 8px solid #1e8449;
+    box-shadow: 0 4px 16px rgba(39,174,96,0.2);
+}
+.sev-emoji-wrap { font-size: 3.5rem; line-height: 1; flex-shrink: 0; }
+.sev-text-wrap  { flex: 1; }
+.sev-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin: 0 0 5px 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+.sev-msg {
+    font-size: 0.92rem;
+    margin: 0 0 10px 0;
+    line-height: 1.6;
+    font-weight: 500;
+}
+.sev-banner.critical .sev-title { color: #c0392b !important; }
+.sev-banner.critical .sev-msg   { color: #7b2020 !important; }
+.sev-banner.warning  .sev-title { color: #b7770d !important; }
+.sev-banner.warning  .sev-msg   { color: #7d5a00 !important; }
+.sev-banner.ok       .sev-title { color: #1e8449 !important; }
+.sev-banner.ok       .sev-msg   { color: #145a32 !important; }
+.sev-logos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+}
+.sev-logo {
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.sev-banner.critical .sev-logo {
+    background: rgba(192,57,43,0.12);
+    color: #c0392b !important;
+    border: 1px solid rgba(192,57,43,0.3);
+}
+.sev-banner.warning .sev-logo {
+    background: rgba(230,126,34,0.12);
+    color: #b7770d !important;
+    border: 1px solid rgba(230,126,34,0.3);
+}
+.sev-banner.ok .sev-logo {
+    background: rgba(39,174,96,0.12);
+    color: #1e8449 !important;
+    border: 1px solid rgba(39,174,96,0.3);
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -912,6 +1013,48 @@ if page == "🩺  Diagnose Patient":
 </div>
 """, unsafe_allow_html=True)
 
+            # ── Severity / Wellness Banner with Logos ──
+            sev_data = {
+                "Very Severe": ("critical",
+                    "🚨🆘🚨",
+                    "CRITICAL — Immediate Emergency Care Required!",
+                    "Your condition is <b>Very Severe</b>. Please go to the Emergency Department or call <b>🚑 108</b> RIGHT NOW. Do not wait.",
+                    ["🚨 Call 108 Now", "🏥 Go to ER", "⛔ Do Not Delay", "💉 ICU May Be Needed"]),
+                "Severe": ("critical",
+                    "⚠️🔴⚠️",
+                    "SEVERE — See a Doctor Immediately Today",
+                    "Your symptoms are <b>Severe</b>. Please visit a hospital or OPD today. Do not ignore these warning signs.",
+                    ["🏥 Visit Hospital", "👨‍⚕️ See Doctor Today", "📞 Call 108 if Worse", "💊 Prescription Needed"]),
+                "Moderate": ("warning",
+                    "🟡⚕️🟡",
+                    "MODERATE — Doctor Consultation Advised",
+                    "Your condition is <b>Moderate</b>. Schedule a doctor visit within 1–2 days for proper evaluation and treatment.",
+                    ["👨‍⚕️ Book Appointment", "💊 OTC Meds May Help", "🌡️ Monitor Vitals", "📋 Keep Symptom Log"]),
+                "Mild": ("ok",
+                    "🌿😊🌿",
+                    "MILD — Rest & Monitor, You'll Be Fine",
+                    "Your symptoms are <b>Mild</b>. Rest well, stay hydrated, and monitor. See a doctor if symptoms worsen after 3 days.",
+                    ["💧 Stay Hydrated", "😴 Get Enough Rest", "🥗 Eat Nutritious Food", "🌡️ Monitor Temperature", "📅 Review in 3 Days"]),
+                "Very Mild": ("ok",
+                    "😌✅🌟",
+                    "ALL CLEAR — You Are Doing Great!",
+                    "Your symptoms are <b>Very Mild</b>. You appear to be in good health. Keep up healthy habits and stay well! 🎉",
+                    ["✅ Good Health", "💪 Stay Active", "🥗 Eat Well", "😴 Sleep 7–8 hrs", "💧 Drink Water", "🧘 Stay Stress-Free"]),
+            }
+            sc, semoji, stitle, smsg, slogos = sev_data.get(severity,
+                ("warning","⚕️","Check Your Symptoms","Please consult a doctor.",["👨‍⚕️ See Doctor"]))
+            logos_html = "".join(f'<span class="sev-logo">{l}</span>' for l in slogos)
+            st.markdown(f"""
+<div class="sev-banner {sc}">
+  <div class="sev-emoji-wrap">{semoji}</div>
+  <div class="sev-text-wrap">
+    <p class="sev-title">{stitle}</p>
+    <p class="sev-msg">{smsg}</p>
+    <div class="sev-logos">{logos_html}</div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
             m1,m2,m3,m4,m5 = st.columns(5)
             m1.metric("Patient", pname)
             m2.metric("Age / Gender", f"{page2} / {pgender}")
@@ -979,7 +1122,7 @@ elif page == "📋  Patient History":
         <div class="ph-icon">📋</div>
         <div>
             <p class="ph-title">Patient Diagnosis History</p>
-            <p class="ph-sub">All Saved Records · Search · Export to CSV</p>
+            <p class="ph-sub">All Saved Records · Search · Export to CSV / MongoDB / MySQL</p>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -1005,10 +1148,96 @@ elif page == "📋  Patient History":
         cols = [c for c in show if c in df.columns]
         st.dataframe(df[cols], use_container_width=True)
 
-        st.download_button("⬇️  Download Full Report as CSV",
-            data=df.to_csv(index=False),
-            file_name=f"patients_{datetime.now().strftime('%Y%m%d')}.csv",
-            mime="text/csv")
+        st.markdown("---")
+        st.markdown("### 📤 Export / Download Patient Data")
+
+        tab1, tab2, tab3 = st.tabs(["📄 CSV Download", "🍃 MongoDB Export", "🐬 MySQL Export"])
+
+        # ── Tab 1: CSV ──────────────────────────────
+        with tab1:
+            st.markdown("**Download the full report as a CSV file to your computer.**")
+            st.download_button(
+                "⬇️  Download Full Report as CSV  📄",
+                data=df.to_csv(index=False),
+                file_name=f"patients_{datetime.now().strftime('%Y%m%d_%H%M')}.csv",
+                mime="text/csv",
+                use_container_width=True
+            )
+
+        # ── Tab 2: MongoDB ──────────────────────────
+        with tab2:
+            st.markdown("**Push all patient records to your MongoDB Atlas database.**")
+            mongo_uri = st.text_input("MongoDB URI",
+                placeholder="mongodb+srv://user:password@cluster.mongodb.net/",
+                type="password")
+            mongo_db  = st.text_input("Database Name",  value="smart_diagnosis")
+            mongo_col = st.text_input("Collection Name", value="patients")
+            if st.button("🍃  Upload to MongoDB", use_container_width=True):
+                if not mongo_uri:
+                    st.error("❌ Please enter your MongoDB URI first.")
+                else:
+                    try:
+                        from pymongo import MongoClient
+                        client = MongoClient(mongo_uri, serverSelectionTimeoutMS=5000)
+                        db_mongo = client[mongo_db]
+                        col = db_mongo[mongo_col]
+                        records_dict = df.to_dict("records")
+                        col.insert_many(records_dict)
+                        st.success(f"✅  {len(records_dict)} records uploaded to MongoDB → {mongo_db}/{mongo_col} !")
+                        client.close()
+                    except ImportError:
+                        st.error("❌ pymongo not installed. Run:  pip install pymongo")
+                    except Exception as e:
+                        st.error(f"❌ MongoDB Error: {e}")
+            st.info("💡 Get a free MongoDB Atlas cluster at **mongodb.com/atlas** — free 512MB tier available.")
+            st.code("pip install pymongo", language="bash")
+
+        # ── Tab 3: MySQL ────────────────────────────
+        with tab3:
+            st.markdown("**Push all patient records to your MySQL database.**")
+            c1,c2 = st.columns(2)
+            with c1:
+                mysql_host = st.text_input("Host", value="localhost")
+                mysql_user = st.text_input("Username", value="root")
+                mysql_db   = st.text_input("Database", value="smart_diagnosis")
+            with c2:
+                mysql_port = st.number_input("Port", value=3306, min_value=1)
+                mysql_pass = st.text_input("Password", type="password")
+                mysql_tbl  = st.text_input("Table Name", value="patients")
+            if st.button("🐬  Upload to MySQL", use_container_width=True):
+                if not mysql_pass:
+                    st.error("❌ Please enter your MySQL password.")
+                else:
+                    try:
+                        import mysql.connector
+                        conn = mysql.connector.connect(
+                            host=mysql_host, port=int(mysql_port),
+                            user=mysql_user, password=mysql_pass,
+                            database=mysql_db, connection_timeout=5
+                        )
+                        cursor = conn.cursor()
+                        # Create table if not exists
+                        cols_sql = ", ".join([f"`{c}` TEXT" for c in df.columns])
+                        cursor.execute(f"CREATE TABLE IF NOT EXISTS `{mysql_tbl}` ({cols_sql})")
+                        # Insert rows
+                        for _, row in df.iterrows():
+                            placeholders = ", ".join(["%s"] * len(row))
+                            col_names = ", ".join([f"`{c}`" for c in df.columns])
+                            cursor.execute(
+                                f"INSERT INTO `{mysql_tbl}` ({col_names}) VALUES ({placeholders})",
+                                tuple(str(v) for v in row)
+                            )
+                        conn.commit()
+                        cursor.close()
+                        conn.close()
+                        st.success(f"✅  {len(df)} records uploaded to MySQL → {mysql_db}.{mysql_tbl} !")
+                    except ImportError:
+                        st.error("❌ mysql-connector not installed. Run:  pip install mysql-connector-python")
+                    except Exception as e:
+                        st.error(f"❌ MySQL Error: {e}")
+            st.info("💡 Use XAMPP (free) for local MySQL, or PlanetScale / Railway for free cloud MySQL.")
+            st.code("pip install mysql-connector-python", language="bash")
+
     else:
         st.info("No patient records found yet. Complete a diagnosis first.")
 
